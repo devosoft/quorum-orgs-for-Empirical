@@ -23,8 +23,7 @@ $(TARGETS): % : %.cc $(EVO_DEPEND) $(QUORUM_DEPEND)
 debug-%: $*.cc $(EVO_DEPEND) $(QUORUM_DEPEND)
 	$(CXX_NATIVE) $(CFLAGS_debug) $< -o $@.debug
 
-test:
-	echo $(CXX_native) $(CFLAGS_all) $(OFLAGS_native)
+all: $(TARGETS)
 
 clean:
 	rm -rf *.out
