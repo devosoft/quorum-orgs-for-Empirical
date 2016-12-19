@@ -287,7 +287,7 @@ std::ostream & operator << (std::ostream & out, QuorumOrganism & org) {
 
 
 
-const QuorumOrgGenome standard_genome = QuorumOrgGenome(0.5, 10, 40, 0, true, true);
+const QuorumOrgGenome standard_genome = QuorumOrgGenome(0.0, 10, 40, 0, true, true);
 const QuorumOrgGenome lying_defector_genome = QuorumOrgGenome(0, 10, 40, 1, false, true);
 const QuorumOrgGenome cooperator_genome = QuorumOrgGenome(1, 10, 40, 2, true, true);
 const QuorumOrgGenome scrooge_genome = QuorumOrgGenome(0.015, 10, 40, 3, true, true);
