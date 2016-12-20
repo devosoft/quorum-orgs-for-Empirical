@@ -1,3 +1,6 @@
 *.out
 *.gch
 */env/*
+*.csv
+*.cfg
+*.swp

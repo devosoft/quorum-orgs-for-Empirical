@@ -6,7 +6,7 @@ EMP_include = -I$(EMP_root)
 CXX_native := g++
 OFLAGS_native := -O3
 OFLAGS_debug := -g
-CFLAGS_all := -Wall -Wno-unused-function -std=c++11
+CFLAGS_all := -Wall -Wno-unused-function -std=c++14
 
 
 CFLAGS_native := $(CFLAGS_all) $(OFLAGS_native) $(EMP_include)
