@@ -287,7 +287,10 @@ int execute(QuorumRunState<FOUNDATION, FOUNDATION_CONF> & state) {
       state.Qpop->Update();
       if(config->ENABLE_BOTTLENECK() && config->BOTTLENECK_SPACING() > 0
                                      && update_num % config->BOTTLENECK_SPACING() == 0) {
-        state.Qpop->ExposeManager().BottleneckEvent(config->BOTTLENECK_LETHALITY());
+
+	//Don't want to kill a bunch of orgs at update 0
+	if(update_num > 0) state.Qpop->ExposeManager().BottleneckEvent(config->BOTTLENECK_LETHALITY());
+
         state.Qpop->set_available_points(config->AVAILABLE_PRIVATE_PTS());
       }
       if(!config->ENABLE_PRIVATE_POINTS()) {
