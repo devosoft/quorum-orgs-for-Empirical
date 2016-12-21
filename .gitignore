@@ -1,0 +1,6 @@
+*.swp
+*.cfg
+*.csv
+*/env/*
+*.swo
+*.out
