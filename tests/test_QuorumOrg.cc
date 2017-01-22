@@ -14,6 +14,10 @@
 #include "../module/QuorumOrg.h"
 #include "../../Empirical/tools/Random.h"
 
+#include "../../Empirical/evo/World.h"
+#include "../../Empirical/evo/PopulationManager.h"
+#include "../../Empirical/evo/FitnessManager.h"
+
 TEST_CASE("Test QuorumOrg construction", "[unit]")
 {
   // test default constructor
@@ -46,4 +50,27 @@ TEST_CASE("Test QuorumOrg construction", "[unit]")
   REQUIRE(copy.HasCooperativeMachinery() == true);
 
 
+}
+
+TEST_CASE("Test QuorumOrg emp::evo::world construct", "[functional]")
+{
+  emp::Random random;
+  emp::evo::World<QuorumOrganism, emp::evo::FitCacheOff> pop(random, "TestWorld");
+
+  QuorumOrganism base;
+
+  // fill the world with some initial orgs....
+  const uint32_t numTestOrgs = 10;
+  for (uint32_t i = 0; i < numTestOrgs; i++) {
+    QuorumOrganism nextOrg(base);
+    pop.Insert(nextOrg);
+  }
+
+  std::function<bool(QuorumOrganism *, emp::Random&)> mutFun = [](QuorumOrganism * org,
+                                                                  emp::Random& random) {
+    return org->Mutate(random);
+  };
+
+
+  pop.SetDefaultMutateFun(mutFun);
 }

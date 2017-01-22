@@ -94,6 +94,9 @@ public:
   unsigned int GetSignalRadius() const { return signalRadius; }
   double GetQuorumThreshold() const { return quorumThreshold; }
 
+  // TODO: fix this function
+  bool Mutate(emp::Random& random) { return false;}
+
 private:
 
   //
