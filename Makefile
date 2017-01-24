@@ -25,6 +25,9 @@ debug-%: $*.cc $(EVO_DEPEND) $(QUORUM_DEPEND)
 
 all: $(TARGETS)
 
+test:
+	cd ./tests && make test
+
 clean:
 	rm -rf *.out
 	rm -rf *.debug

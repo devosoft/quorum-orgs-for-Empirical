@@ -20,20 +20,8 @@
 
 TEST_CASE("Test QuorumOrg construction", "[unit]")
 {
-  // test default constructor
-  QuorumOrganism org;
   emp::Random dice;
 
-  // make sure getters/setters/initialization work
-  REQUIRE(org.GetPoints() == 0);
-  REQUIRE(org.GetAge() == 0);
-  REQUIRE(org.GetPoints() == 0);
-  REQUIRE(org.GetRandom() == nullptr);
-  
-  org.SetRandom(&dice);
-  REQUIRE(org.GetRandom() == &dice);
-
-  
   // test parametarized constructor
   QuorumOrganism coop(0, 1.0, true, 10, 0.8);
 
@@ -41,6 +29,9 @@ TEST_CASE("Test QuorumOrg construction", "[unit]")
   REQUIRE(coop.GetQuorumThreshold() == 0.8);
   REQUIRE(coop.GetCooperationProbability() == 1.0);
   REQUIRE(coop.HasCooperativeMachinery() == true);
+
+  coop.SetRandom(&dice);
+  REQUIRE(coop.GetRandom() == &dice);
 
   // test copy constructor
   QuorumOrganism copy(coop);
@@ -57,15 +48,17 @@ TEST_CASE("Test QuorumOrg emp::evo::world construct", "[functional]")
   emp::Random random;
   emp::evo::World<QuorumOrganism, emp::evo::FitCacheOff> pop(random, "TestWorld");
 
-  QuorumOrganism base;
+  QuorumOrganism coop(0, 1.0, true, 10, 0.8);
 
   // fill the world with some initial orgs....
   const uint32_t numTestOrgs = 10;
   for (uint32_t i = 0; i < numTestOrgs; i++) {
-    QuorumOrganism nextOrg(base);
+    QuorumOrganism nextOrg(coop);
     pop.Insert(nextOrg);
   }
 
+  // precice typespec required 'cuz otherwise SetDefaultMutFun complains about the
+  // TEST_CASE_[number]::std::function blah blah
   std::function<bool(QuorumOrganism *, emp::Random&)> mutFun = [](QuorumOrganism * org,
                                                                   emp::Random& random) {
     return org->Mutate(random);
@@ -73,4 +66,10 @@ TEST_CASE("Test QuorumOrg emp::evo::world construct", "[functional]")
 
 
   pop.SetDefaultMutateFun(mutFun);
+
+  // now attempt to run the world
+  for (uint32_t ud = 0; ud < 100; ud++) {
+    // keep best individual
+    
+  }
 }

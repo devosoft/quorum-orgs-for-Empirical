@@ -20,6 +20,9 @@
 #include "../../Empirical/tools/Random.h"
 #include "../../Empirical/config/config.h"
 
+// local includes
+#include "QuorumGenome.h"
+
 /**
  * This class represents a quorum-sensing organism
  *
@@ -29,15 +32,10 @@ class QuorumOrganism {
 public:
 
   /// Constructor (default)
-  QuorumOrganism() {};
+  QuorumOrganism() = delete;
 
   /// Copy constructor
-  QuorumOrganism(QuorumOrganism const & other) {
-    lineage = other.lineage;
-    cooperationProbability = other.cooperationProbability;
-    hasCooperativeMachinery = other.hasCooperativeMachinery;
-    signalRadius = other.signalRadius;
-    quorumThreshold = other.quorumThreshold;
+  QuorumOrganism(QuorumOrganism const & other) : genome(other.genome){
   }
 
   /** Constructor
@@ -48,24 +46,18 @@ public:
    * \param rad the radius of the AI signal this organism can produce
    * \param thresh the quorum threshold for this organism
    */
-  QuorumOrganism(unsigned int lin, double coop, bool hcm, unsigned int rad, double thresh) {
-    lineage = lin;
-    cooperationProbability = coop;
-    hasCooperativeMachinery = hcm;
-    signalRadius = rad;
-    quorumThreshold = thresh;
+  QuorumOrganism(unsigned int lin, double coop, bool hcm, unsigned int rad, double thresh) :
+    genome(lin, coop, hcm, rad, thresh){
   }
 
   /// Destructor
-  ~QuorumOrganism() {};
+  ~QuorumOrganism() {
+  };
 
   /// Getter for age
   unsigned int GetAge() const { return age; }
   /// Getter for points
   unsigned int GetPoints() const { return points; }
-  /// Getter for the chance of cooperation, for this organism
-  double get_cooperative_probability() const { return cooperationProbability; }
-
 
   // getters and setters for the above
   void IncrementAge() { ++age; }
@@ -73,8 +65,8 @@ public:
   unsigned int GetLoc() const { return loc; }
 
   // functions to configure random
-  void SetRandom(emp::Random * ptr) { random = ptr; }
-  emp::Random * GetRandom() const { return random; }
+  void SetRandom(emp::Random * ptr) { rand = ptr; }
+  emp::Random * GetRandom() const { return rand; }
 
   /** Reset all state parameters
    * 
@@ -87,24 +79,30 @@ public:
     loc = 0;
   }
 
-  // getters for genome properties
-  unsigned int GetLineage() const { return lineage; }
-  bool HasCooperativeMachinery() const { return hasCooperativeMachinery; }
-  double GetCooperationProbability() const { return cooperationProbability; }
-  unsigned int GetSignalRadius() const { return signalRadius; }
-  double GetQuorumThreshold() const { return quorumThreshold; }
+  /** Mutate function
+   * 
+   * Calls the genome's mutate function
+   * \param random ref to the random object to use
+   * \returns true/false if magic happens
+   */
+  bool Mutate(emp::Random& random) { return genome.Mutate(random);}
 
-  // TODO: fix this function
-  bool Mutate(emp::Random& random) { return false;}
+
+  // passthrough getters/setters
+  // ought to be a better way to do this, not sure what it is tho
+  unsigned int GetLineage() const { return genome.GetLineage(); }
+  bool HasCooperativeMachinery() const { return genome.HasCooperativeMachinery(); }
+  double GetCooperationProbability() const { return genome.GetCooperationProbability(); }
+  unsigned int GetSignalRadius() const { return genome.GetSignalRadius(); }
+  double GetQuorumThreshold() const { return genome.GetQuorumThreshold(); }
+
 
 private:
-
-  //
-  // Less interesting attributes
-  //
+  /// our genome
+  QuorumGenome genome;
 
   /// pointer to the pseudorandom number generator used by this org
-  emp::Random * random = nullptr;
+  emp::Random * rand = nullptr;
 
   //
   // state-specific properties
@@ -117,32 +115,4 @@ private:
   /// the location of this organism on the grid
   unsigned int loc = 0;
 
-  
-  //
-  // genome properties
-  // might be worth putting these in their own class
-  //
-
-  /// ID for the lineage of this organism
-  unsigned int lineage = 0;
-  /// Specifies if this org has the machinery to signal high density and cooperate
-  bool hasCooperativeMachinery = false;
-  /// The probability this organism has to cooperate
-  double cooperationProbability = 0;
-  /// The signal radius of this organism, when it produces AI compound
-  unsigned int signalRadius = 10;
-  /// The proportion of local suqares that must be signalling for this org to be at quorum
-  double quorumThreshold = 1.0;
-
-  friend bool operator== (QuorumOrganism const & lhs, QuorumOrganism const & rhs);  
 };
-
-
-/// equality operator--necessary for various structurings
-bool operator== (QuorumOrganism const & lhs, QuorumOrganism const & rhs) {
-  return (lhs.lineage == rhs.lineage &&
-          lhs.hasCooperativeMachinery == rhs.hasCooperativeMachinery &&
-          lhs.cooperationProbability == rhs.cooperationProbability &&
-          lhs.signalRadius == rhs.signalRadius &&
-          lhs.quorumThreshold == rhs.quorumThreshold);
-}
