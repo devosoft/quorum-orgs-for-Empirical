@@ -47,8 +47,8 @@ namespace evo {
       }
 
       // consider quoorum to be enough hi or enough lo in potential radius
-      return (double) active_neighbors / (double) potential > lo_weight ||
-             (double) num_hi / (double) potential < hi_weight;
+      return (double) active_neighbors / (double) potential >= lo_weight ||
+             (double) num_hi / (double) potential >= hi_weight;
     }
 
     double calculate_quorum (QuorumOrganism * org) {
@@ -152,20 +152,14 @@ public:
       // get contribution and round-robin it out to the various orgs
       // producer gets first dibs
       if( (contribution = org->get_contribution(calculate_quorum(cluster))) > 0){
-        auto recipiant = neighbors.end();
+	org->add_points(contribution/9);
 
-        // iterate over neighbors && give them things, with donator going first
-        while(contribution > 0) {
-          if (recipiant == neighbors.end()) {
-            recipiant = neighbors.begin()--; // will be incremented at the end of the loop
-            org->add_points(1);
-          }
-          else if ((*recipiant) != nullptr) {
-            (*recipiant)->add_points(1);
-          }
-          contribution--;
-          recipiant++;
-        }
+	for(auto recipient=neighbors.begin(); recipient != neighbors.end(); recipient++){
+
+	  if ((*recipient) != nullptr)
+	    (*recipient)->add_points(contribution/9);
+	}
+
       }
     }
 
@@ -206,8 +200,8 @@ public:
         if (org == nullptr) {continue;} // don't even try to touch nulls
         org->state.reset_accounting();
         if (available_private_points > 0) {
-          org->add_points(1); // metabolize
-          available_private_points--;
+          org->add_points(5); // metabolize
+          available_private_points-=5;
         }
         Publicize(org);
       }
