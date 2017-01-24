@@ -1,0 +1,5 @@
+compiler:
+  - clang++
+  - g++
+script:
+  make test
