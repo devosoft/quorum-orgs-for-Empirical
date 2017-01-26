@@ -60,7 +60,8 @@ EMP_BUILD_CONFIG( QuorumConfigBase,
     VALUE(ENABLE_MUTATION, bool, 1, "If mutation should be enabled"),
     VALUE(RAND_SEED, int, 238947, "Seed for the random generator"),
     VALUE(PREFIX, std::string, "", "Prefix for filenames"),
-    VALUE(AVAILABLE_PRIVATE_PTS, long, 180000, "Number of available private points"),
+    VALUE(AVAILABLE_PRIVATE_PTS, long, 180000, "Number of private points injected at resource event"),
+    VALUE(STARTING_RESOURCE, long, 50000, "Number of private resources initially available"),
     VALUE(ENABLE_BOTTLENECK, bool, 1, "Enable the bottleneck effect"),
     VALUE(ENABLE_PRIVATE_POINTS, bool, 1, "Enable private and public points"),
     VALUE(RESOURCE_SPACING, unsigned int, 500, "Number of ticks between resource drops"),
@@ -283,6 +284,7 @@ int execute(QuorumRunState<FOUNDATION, FOUNDATION_CONF> & state) {
     unsigned int checkpoint = 0;
 
     std::cerr << "Progress:   0% [ . . . . . . . . . .]";
+    state.Qpop->set_available_points(config->STARTING_RESOURCE());
     // loop through the specified number of updates && run the evolution
     for (unsigned int update_num = 0; update_num < state.runtime; update_num++) {
       state.Qpop->Update();
