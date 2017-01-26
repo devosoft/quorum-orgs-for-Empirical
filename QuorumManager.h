@@ -84,6 +84,7 @@ public:
       // there are (num_locs * grid_density) # of slots that'll be occupied w/ orgs
       // they are `spacing` distance apart
       int num_to_place = num_locs * grid_density;
+      if(num_to_place == 0) num_to_place =1;
       int spacing = num_locs / num_to_place;
 
 
