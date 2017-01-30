@@ -296,7 +296,7 @@ int execute(QuorumRunState<FOUNDATION, FOUNDATION_CONF> & state) {
 	if(update_num == 0) state.Qpop->set_available_points(config->AVAILABLE_PRIVATE_PTS());
 	else if(config->RESOURCE_SPACING() > 0)
 	  state.Qpop->set_available_points(config->AVAILABLE_PRIVATE_PTS());
-      }else{
+      }else if(!config->ENABLE_PRIVATE_POINTS()){
         state.Qpop->set_available_points(100000000); // arbitrarily large number
       }
       if(( (double) update_num / (double) state.runtime) * 20 > checkpoint) {
