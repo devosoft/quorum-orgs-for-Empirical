@@ -292,7 +292,7 @@ int execute(QuorumRunState<FOUNDATION, FOUNDATION_CONF> & state) {
         && update_num > 0 && update_num % config->BOTTLENECK_SPACING() == 0) {
         state.Qpop->ExposeManager().BottleneckEvent(config->BOTTLENECK_LETHALITY());
       }
-      if(config->ENABLE_PRIVATE_POINTS() && update_num % config->RESOURCE_SPACING() == 0){
+      if(config->ENABLE_PRIVATE_POINTS() && config->RESOURCE_SPACING() && update_num % config->RESOURCE_SPACING() == 0){
 	if(update_num == 0) state.Qpop->set_available_points(config->AVAILABLE_PRIVATE_PTS());
 	else if(config->RESOURCE_SPACING() > 0)
 	  state.Qpop->set_available_points(config->AVAILABLE_PRIVATE_PTS());
