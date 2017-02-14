@@ -81,38 +81,50 @@ public:
       if(alt_density > 0) { assert(alt_seed != nullptr && "Must have non-null alt-seed when alt-density specified!");}
 
       int num_placed = 0, position = 0, num_alt_placed = 0;
-      // there are (num_locs * grid_density) # of slots that'll be occupied w/ orgs
-      // they are `spacing` distance apart
-      int num_to_place = num_locs * grid_density;
-      if(num_to_place == 0) num_to_place =1;
-      int spacing = num_locs / num_to_place;
-
-
-      // there are (num_locs * grid_density * alt_density) # spaces that'll be occupied
-      // w/ alt orgs
-      int num_alt = num_to_place * alt_density;
 
       QuorumOrganism * org;
 
       while(position < pop.size()) {
-        if(alt_density > 0 && (double) num_alt_placed / (double) num_to_place < alt_density) {
-          org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->ai_radius,
-                                   alt_seed->quorum_threshold, mut, 0, alt_seed->lineage,
-                                   alt_seed->get_hi_ai(), alt_seed->get_lo_ai());
-          num_alt_placed++;
-        } else {
-          org = new QuorumOrganism(seed->co_op_prob, seed->ai_radius,seed->quorum_threshold, mut,
-                                   0, seed->lineage, seed->get_hi_ai(), seed->get_lo_ai());
-        }
+	if(random_ptr->GetDouble() < grid_density) {
+	  if(random_ptr->GetDouble() < alt_density) {
+	    org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->ai_radius,
+				     alt_seed->quorum_threshold, mut, 0, alt_seed->lineage,
+				     alt_seed->get_hi_ai(), alt_seed->get_lo_ai());
+	    num_alt_placed++;
+	  }
+	  else {
+	    org = new QuorumOrganism(seed->co_op_prob, seed->ai_radius,seed->quorum_threshold, mut,
+				     0, seed->lineage, seed->get_hi_ai(), seed->get_lo_ai());
+	    num_placed++;
+	  }
 
-        pop[position] = org;
-        pop[position]->set_id(position);
-        position += spacing;
-        num_placed++;
+	  pop[position] = org;
+	  pop[position]->set_id(position);
+	  position += spacing;
+
+	}
       }
-
+      if(!num_placed) {
+	//Need at least one organism in the world
+	org = new QuorumOrganism(seed->co_op_prob, seed->ai_radius,seed->quorum_threshold, mut,
+				 0, seed->lineage, seed->get_hi_ai(), seed->get_lo_ai());
+	pop[0] = org;
+	pop[0]->set_id(0);
+      }
+      if(!num_alt_placed && alt_density){
+	//Need at least one alternative organism in the world
+	org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->ai_radius,
+				 alt_seed->quorum_threshold, mut, 0, alt_seed->lineage,
+				 alt_seed->get_hi_ai(), alt_seed->get_lo_ai());
+	pop[1] = org;
+	pop[1]->set_id(1);
+	
+      }
     }
+	
 
+      
+      
     void set_available_points(long pts) {available_private_points = pts;}
     long get_available_points () const {return available_private_points;}
 
