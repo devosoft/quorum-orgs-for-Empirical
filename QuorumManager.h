@@ -100,7 +100,7 @@ public:
 
 	  pop[position] = org;
 	  pop[position]->set_id(position);
-	  position += spacing;
+	  position++;
 
 	}
       }
