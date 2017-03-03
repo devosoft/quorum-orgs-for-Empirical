@@ -16,12 +16,13 @@
 #include <fstream>
 
 #include "quorum.cc"
+#include "QSPop.h"
 
 using QuorumDriverConfig = QuorumConfigBase;
 
 // define the underlying population manager here
 template <class QOrg>
-using FOUNDATION = emp::evo::PopulationManager_Grid<QOrg>;
+using FOUNDATION = emp::evo::PopulationManager_Grid_NoOverwrite<QOrg>;
 
 int main (int argc, char * argv[]) {
   std::string prefix;

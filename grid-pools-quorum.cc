@@ -17,7 +17,7 @@
 #include <math.h>
 
 #include "quorum.cc"
-
+#include "QSPop.h"
 
 EMP_EXTEND_CONFIG(QuorumDriverConfig, QuorumConfigBase,
     VALUE(SUBGRID_SIZE, int, 36, "Size of the subgrids")
@@ -26,7 +26,7 @@ EMP_EXTEND_CONFIG(QuorumDriverConfig, QuorumConfigBase,
 
 // define the underlying population manager here
 template <class QOrg>
-using FOUNDATION = emp::evo::PopulationManager_GridPools<QOrg>;
+using FOUNDATION = emp::evo::PopulationManager_Pools_NoOverwrite<QOrg>;
 
 int main (int argc, char * argv[]) {
   std::string prefix;
