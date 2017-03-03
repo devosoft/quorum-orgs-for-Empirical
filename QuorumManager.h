@@ -85,6 +85,7 @@ public:
       QuorumOrganism * org;
 
       while(position < pop.size()) {
+	double temp = random_ptr->GetDouble();
 	if(random_ptr->GetDouble() < grid_density) {
 	  if(random_ptr->GetDouble() < alt_density) {
 	    org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->ai_radius,
@@ -100,9 +101,10 @@ public:
 
 	  pop[position] = org;
 	  pop[position]->set_id(position);
-	  position++;
+	 
 
 	}
+	position++;
       }
       if(!num_placed) {
 	//Need at least one organism in the world
