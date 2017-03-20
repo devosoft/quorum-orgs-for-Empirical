@@ -181,7 +181,7 @@ public:
   static unsigned int num_to_donate, needed_to_reproduce, cost_to_donate;
   static double mutation_amount;
 
-  static const QuorumOrgGenome initial_configurations[5];
+  static const QuorumOrgGenome initial_configurations[6];
 
   static int classify (QuorumOrganism const * org) {
     if (org == nullptr) { return -1;}
@@ -292,15 +292,17 @@ const QuorumOrgGenome lying_defector_genome = QuorumOrgGenome(0, 10, 40, 1, fals
 const QuorumOrgGenome cooperator_genome = QuorumOrgGenome(1, 10, 40, 2, true, true);
 const QuorumOrgGenome scrooge_genome = QuorumOrgGenome(0.015, 10, 40, 3, true, true);
 const QuorumOrgGenome truthful_defector_genome = QuorumOrgGenome(0, 10, 40, 4, false, false);
+ const QuorumOrgGenome intermediate_genome = QuorumOrgGenome(0.5, 10, 40, 5, true, true);
 
 
 /// selection of standardized starting configurations for QOrgs
-const QuorumOrgGenome QuorumOrganism::initial_configurations[5] = {
+const QuorumOrgGenome QuorumOrganism::initial_configurations[6] = {
   standard_genome,
   lying_defector_genome,
   cooperator_genome,
   scrooge_genome,
-  truthful_defector_genome
+  truthful_defector_genome,
+  intermediate_genome
 };
 
 unsigned int QuorumOrganism::num_to_donate;
