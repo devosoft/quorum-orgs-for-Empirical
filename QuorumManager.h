@@ -88,13 +88,13 @@ public:
 	double temp = random_ptr->GetDouble();
 	if(random_ptr->GetDouble() < grid_density) {
 	  if(random_ptr->GetDouble() < alt_density) {
-	    org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->ai_radius,
+	    org = new QuorumOrganism(alt_seed->co_op_prob,alt_seed->control_prob, alt_seed->ai_radius,
 				     alt_seed->quorum_threshold, mut, 0, alt_seed->lineage,
 				     alt_seed->get_hi_ai(), alt_seed->get_lo_ai());
 	    num_alt_placed++;
 	  }
 	  else {
-	    org = new QuorumOrganism(seed->co_op_prob, seed->ai_radius,seed->quorum_threshold, mut,
+	    org = new QuorumOrganism(seed->co_op_prob,seed->control_prob, seed->ai_radius,seed->quorum_threshold, mut,
 				     0, seed->lineage, seed->get_hi_ai(), seed->get_lo_ai());
 	    num_placed++;
 	  }
@@ -108,14 +108,14 @@ public:
       }
       if(!num_placed) {
 	//Need at least one organism in the world
-	org = new QuorumOrganism(seed->co_op_prob, seed->ai_radius,seed->quorum_threshold, mut,
+	org = new QuorumOrganism(seed->co_op_prob, seed->control_prob, seed->ai_radius,seed->quorum_threshold, mut,
 				 0, seed->lineage, seed->get_hi_ai(), seed->get_lo_ai());
 	pop[0] = org;
 	pop[0]->set_id(0);
       }
       if(!num_alt_placed && alt_density){
 	//Need at least one alternative organism in the world
-	org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->ai_radius,
+	org = new QuorumOrganism(alt_seed->co_op_prob, alt_seed->control_prob, alt_seed->ai_radius,
 				 alt_seed->quorum_threshold, mut, 0, alt_seed->lineage,
 				 alt_seed->get_hi_ai(), alt_seed->get_lo_ai());
 	pop[1] = org;

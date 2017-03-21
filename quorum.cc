@@ -188,6 +188,20 @@ void configure_stats_manager(QuorumRunState<FOUNDATION, FOUNDATION_CONF> & state
       return pop_coop_prob / (double) num_orgs;
     };
 
+    std::function<double()>avg_control_chance=[underlying] () {
+      double pop_control_prob = 0;
+      int num_orgs = 0;
+
+      for(auto org : (*underlying)) {
+        if(org != nullptr) {
+          pop_control_prob += org->state.genome.control_prob;
+          num_orgs++;
+        }
+      }
+
+      return pop_control_prob / (double) num_orgs;
+    };
+
 
    std::function<double()>avg_points=[underlying] () {
       double points = 0;
@@ -257,6 +271,7 @@ void configure_stats_manager(QuorumRunState<FOUNDATION, FOUNDATION_CONF> & state
                            "percent" + init_config_names[state.config->INITIAL_CONFIG()]);
   Qstats.AddFunction(used_grid_capacity, "grid_usage");
   Qstats.AddFunction(avail_private, "available_private_pts");
+  Qstats.AddFunction(avg_control_chance, "control_prob");
 
 }
 

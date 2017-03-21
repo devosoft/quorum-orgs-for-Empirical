@@ -32,19 +32,21 @@ private:
 public:
   int lineage = -1;
   double co_op_prob;
+  double control_prob;
   double ai_radius;
   double quorum_threshold;
 
   QuorumOrgGenome () {
     co_op_prob = 0;
+    control_prob = 0;
     ai_radius = 10;
     quorum_threshold = 1;
     can_make_HiAI = false;
     can_make_LoAI = false;
   }
 
-  QuorumOrgGenome(double cprob, double airad, double qthresh, int lin, bool cmha, bool cmla) :
-    co_op_prob(cprob), ai_radius(airad), quorum_threshold(qthresh), lineage(lin),
+QuorumOrgGenome(double cprob, double ctlprob, double airad, double qthresh, int lin, bool cmha, bool cmla) :
+  co_op_prob(cprob),control_prob(ctlprob), ai_radius(airad), quorum_threshold(qthresh), lineage(lin),
     can_make_HiAI(cmha), can_make_LoAI(cmla) {};
 
   // prints co-op prob, ai_gen_prob, quorum_thresh
@@ -121,9 +123,9 @@ public:
     mutate = false;
   };
 
-  QuorumOrgState (double cprob, double aprob, double qthresh, bool mut,
+  QuorumOrgState (double cprob,double ctlprob, double aprob, double qthresh, bool mut,
                   unsigned int pts, int lin=-1, bool cmha = false, bool cmla = false) :
-    genome(cprob, aprob, qthresh, lin, cmha, cmla), mutate(mut), points(pts) {
+  genome(cprob,ctlprob, aprob, qthresh, lin, cmha, cmla), mutate(mut), points(pts) {
 
     age = 0;
     loc = 0;
@@ -133,11 +135,12 @@ public:
 
   // Copy constructor!
   QuorumOrgState (const QuorumOrgState & other) : genome(other.genome.co_op_prob,
-                                                  other.genome.ai_radius,
-                                                  other.genome.quorum_threshold,
-                                                  other.genome.get_lineage(),
-                                                  other.genome.can_make_HiAI,
-                                                  other.genome.can_make_LoAI),
+							 other.genome.control_prob,
+							 other.genome.ai_radius,
+							 other.genome.quorum_threshold,
+							 other.genome.get_lineage(),
+							 other.genome.can_make_HiAI,
+							 other.genome.can_make_LoAI),
                                                   hi_density(false), mutate(other.mutate),
                                                   points(0), age(0), loc(0), num_offspring(0) {
   }
@@ -193,9 +196,9 @@ public:
   QuorumOrganism () {};
 
   // Config constructor
-  QuorumOrganism (double cprob, double airad, double qthresh, bool mut,
+  QuorumOrganism (double cprob,double ctlprob, double airad, double qthresh, bool mut,
                   unsigned int pts, int lin, bool cmha, bool cmla) {
-    this->QuorumOrganism::state = QuorumOrgState(cprob, airad, qthresh, mut, pts, lin, cmha, cmla);
+    this->QuorumOrganism::state = QuorumOrgState(cprob,ctlprob, airad, qthresh, mut, pts, lin, cmha, cmla);
   }
 
   QuorumOrganism (const QuorumOrganism & other) {
@@ -215,8 +218,9 @@ public:
     if (state.mutate) {
       //state.genome.co_op_prob += random.GetRandNormal(0, mutation_amount);
       state.genome.co_op_prob += random.GetRandNormal(0, mutation_amount);
-      if (state.genome.co_op_prob < 0) {state.genome.co_op_prob = 0;}
-      else if (state.genome.co_op_prob > 1) { state.genome.co_op_prob = 1;}
+      state.genome.control_prob += random.GetRandNormal(0, mutation_amount);
+      if (state.genome.co_op_prob < 0) {state.genome.co_op_prob = 0; state.genome.control_prob=0;}
+      else if (state.genome.co_op_prob > 1) { state.genome.co_op_prob = 1; state.genome.control_prob=1;}
 
       state.genome.can_make_HiAI = random.P(state.genome.co_op_prob);
       state.genome.can_make_LoAI = state.genome.can_make_LoAI && random.P(state.genome.co_op_prob);
@@ -287,12 +291,12 @@ std::ostream & operator << (std::ostream & out, QuorumOrganism & org) {
 
 
 
-const QuorumOrgGenome standard_genome = QuorumOrgGenome(0.0, 10, 40, 0, true, true);
-const QuorumOrgGenome lying_defector_genome = QuorumOrgGenome(0, 10, 40, 1, false, true);
-const QuorumOrgGenome cooperator_genome = QuorumOrgGenome(1, 10, 40, 2, true, true);
-const QuorumOrgGenome scrooge_genome = QuorumOrgGenome(0.015, 10, 40, 3, true, true);
-const QuorumOrgGenome truthful_defector_genome = QuorumOrgGenome(0, 10, 40, 4, false, false);
- const QuorumOrgGenome intermediate_genome = QuorumOrgGenome(0.5, 10, 40, 5, true, true);
+ const QuorumOrgGenome standard_genome = QuorumOrgGenome(0.0,0.0, 10, 40, 0, true, true);
+ const QuorumOrgGenome lying_defector_genome = QuorumOrgGenome(0,0, 10, 40, 1, false, true);
+ const QuorumOrgGenome cooperator_genome = QuorumOrgGenome(1,1, 10, 40, 2, true, true);
+ const QuorumOrgGenome scrooge_genome = QuorumOrgGenome(0.015,0.015, 10, 40, 3, true, true);
+ const QuorumOrgGenome truthful_defector_genome = QuorumOrgGenome(0,0, 10, 40, 4, false, false);
+ const QuorumOrgGenome intermediate_genome = QuorumOrgGenome(0.5,0.5, 10, 40, 5, true, true);
 
 
 /// selection of standardized starting configurations for QOrgs
