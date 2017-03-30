@@ -215,12 +215,10 @@ public:
 
   // the aforementioned mutate function
   bool mutate (Random & random) {
-    if (state.mutate) {
+    if (state.mutate && mutation_amount > random.GetDouble(0, 1)) {
       //state.genome.co_op_prob += random.GetRandNormal(0, mutation_amount);
-      state.genome.co_op_prob += random.GetRandNormal(0, mutation_amount);
-      state.genome.control_prob += random.GetRandNormal(0, mutation_amount);
-      if (state.genome.co_op_prob < 0) {state.genome.co_op_prob = 0; state.genome.control_prob=0;}
-      else if (state.genome.co_op_prob > 1) { state.genome.co_op_prob = 1; state.genome.control_prob=1;}
+      state.genome.co_op_prob = random.GetDouble(0, 1);
+      state.genome.control_prob = random.GetDouble(0, 1);
 
       state.genome.can_make_HiAI = random.P(state.genome.co_op_prob);
       state.genome.can_make_LoAI = state.genome.can_make_LoAI && random.P(state.genome.co_op_prob);
